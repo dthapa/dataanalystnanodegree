@@ -68,9 +68,15 @@ def custom_heuristic(file_path):
     predictions = {}
     df = pandas.read_csv(file_path)
     for passenger_index, passenger in df.iterrows():
-        #
-        # your code here
-        #
+        survived = 0
+        # built upon the complex heuristics exercise
+        # and by introducing variables using the describe method
+        if passenger['Sex'] == 'female' or (passenger['Pclass'] <= 2
+            and passenger['Age'] < 18):
+                survived = 1
+        if passenger['Fare'] > 444: 
+            survived = 1
+        predictions[passenger['PassengerId']] = survived
     return predictions
 
 def check_accuracy(file_name):
