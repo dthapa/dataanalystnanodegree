@@ -15,8 +15,8 @@ def imputation(filename):
     # calling baseball['weight']
 
     baseball = pandas.read_csv(filename)
-    
-    #YOUR CODE GOES HERE
+    avg_weight = numpy.mean(baseball['weight'])
+    baseball['weight'] = baseball['weight'].fillna(avg_weight)
 
     return baseball
 

@@ -9,14 +9,16 @@ def api_get_request(url):
     # top artists in Spain.
     #
     # Once you've done this, return the name of the number 1 top artist in Spain.
-    
-    return ... # return the top artist in Spain
+    # local workspace requires last.fm api key
+    x = open(url, 'r')
+    result = json.loads(x.read())
+    return result['topartists']['artist'][0]['name'] # return the top artist in Spain
 
 
 if __name__ == '__main__':
 	# url should be the url to the last.fm api call which
 	# will return find the top artists in Spain
 
-	url = # fill this in 
+    url = 'lastfm.json'# fill this in 
     print api_get_request(url) 
 

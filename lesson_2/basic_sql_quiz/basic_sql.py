@@ -15,7 +15,7 @@ def select_first_50(filename):
     # of the select does matter. Make sure you select registrar then enrolment agency
     # in your query.
     q = """
-    #YOUR QUERY HERE
+    SELECT registrar, enrolment_agency FROM aadhaar_data LIMIT 50;
     """
 
     #Execute your SQL command against the pandas frame
