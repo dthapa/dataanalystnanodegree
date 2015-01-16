@@ -21,11 +21,14 @@ def min_temperature_on_rainy_days(filename):
     weather_data = pd.read_csv(filename)
 
     q = """
-    your query here
+    select avg(cast (mintempi as integer)) from weather_data
+    where cast(mintempi as integer) > 55
+    and cast(rain as integer) = 1
     """
     
     #Execute your SQL command against the pandas frame
     mean_temp_weekends = pandasql.sqldf(q.lower(), locals())
+    print mean_temp_weekends
     return mean_temp_weekends
 
 

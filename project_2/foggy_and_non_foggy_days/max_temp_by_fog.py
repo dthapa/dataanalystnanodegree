@@ -22,8 +22,9 @@ def max_temp_aggregate_by_fog(filename):
     '''
     weather_data = pd.read_csv(filename)
 
+    #things looked ok without casting but grader not happy
     q = """
-    Your query here
+    select fog, max(cast (maxtempi as integer)) from weather_data group by fog
     """
     
     #Execute your SQL command against the pandas frame

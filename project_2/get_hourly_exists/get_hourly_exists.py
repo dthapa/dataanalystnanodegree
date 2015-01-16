@@ -23,9 +23,10 @@ def get_hourly_exits(grp):
     8              8  A002  R051  02-00-00  05-02-11  08:00:00  REGULAR   3144941   1088420               36             89
     9              9  A002  R051  02-00-00  05-02-11  12:00:00  REGULAR   3145094   1088753              153            333
     '''
-    #your code here
-    grp['EXITSn_hourly'] = grp.EXITSn.sub(grp.EXITSn.shift()).fillna(0)
-    return grp
+    #syncing exercise with the one in udacity
+    df = grp
+    df['EXITSn_hourly'] = (df['EXITSn'] - df['EXITSn'].shift(1)).fillna(0)
+    return df
 
 if __name__ == "__main__":
     input_filename = "turnstile_data_master_subset_get_hours_entries.csv"

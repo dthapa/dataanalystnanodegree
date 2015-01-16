@@ -1,4 +1,4 @@
-import datetime
+import datetime as dt
 
 def reformat_subway_dates(date):
     '''
@@ -15,7 +15,8 @@ def reformat_subway_dates(date):
     http://docs.python.org/2/library/datetime.html#datetime.datetime.strptime
     '''
 
-    date_formatted = # your code here
+    date_formatted = dt.datetime.strptime(date, '%m-%d-%y')
+    date_formatted = date_formatted.strftime('%Y-%m-%d')    
     return date_formatted
 
 if __name__ == "__main__":
