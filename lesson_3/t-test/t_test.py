@@ -1,6 +1,7 @@
 import numpy
 import scipy.stats
 import pandas
+import csv
 
 def compare_averages(filename):
     """
@@ -32,7 +33,15 @@ def compare_averages(filename):
     For example, the tuple that you return may look like:
     (True, (9.93570222, 0.000023))
     """
-
+    df = pandas.read_csv(filename)
+    l_handed = df[df.handedness == 'L']
+    r_handed = df[df.handedness == 'R']
+    ttest = scipy.stats.ttest_ind(l_handed['avg'], r_handed['avg'],
+                                  equal_var = False)
+    if ttest[1] <= 0.05:
+        return (False, ttest)
+    else:
+        return (True, ttest)
 
 if __name__ == '__main__':
     filename = "baseball_data.csv"

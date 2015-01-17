@@ -11,7 +11,10 @@ def compute_r_squared(data, predictions):
     # Numpy has a couple of functions -- np.mean() and np.sum() --
     # that you might find useful, but you don't have to use them.
 
-    # YOUR CODE GOES HERE
+    num = np.square(data - predictions).sum()
+    y_bar = np.mean(data)
+    denom = np.square(data - y_bar).sum()
+    r_squared = 1- num/denom
 
     return r_squared
 

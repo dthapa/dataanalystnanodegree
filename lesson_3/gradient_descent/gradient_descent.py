@@ -23,16 +23,20 @@ def compute_cost(features, values, theta):
     return cost
 
 def gradient_descent(features, values, theta, alpha, num_iterations):
-     """
+    """
     Perform gradient descent given a data set with an arbitrary number of features.
     """
-
+    cost_history = []
     # Write some code here that updates the values of theta a number of times equal to
     # num_iterations.  Everytime you have computed the cost for a given set of thetas,
     # you should append it to cost_history.  The function should return both the final
-    # values of theta and the cost history.
 
-    # YOUR CODE GOES HERE
+    for i in range(num_iterations):
+        inner_loop = numpy.dot((values - numpy.dot(features, theta)), features)
+        theta = theta + alpha/len(values) * inner_loop
+        cost_history += [compute_cost(features, values, theta)]
+
+    return cost_history[-1], cost_history        
 
 
 if __name__ == '__main__':
@@ -43,6 +47,8 @@ if __name__ == '__main__':
     # Isolate features / values.
     features = data[['height', 'weight']]
     values = data[['HR']]
+    #print features
+    #print values
     m = len(values)
 
     # Normalize features.
@@ -59,6 +65,7 @@ if __name__ == '__main__':
 
     # Initialize theta and perform gradient descent.
     theta_gradient_descent = numpy.zeros(3)
+    #print theta_gradient_descent
     theta_gradient_descent, cost_history = gradient_descent(features_array, values_array, theta_gradient_descent,
                                                             alpha, num_iterations)
 
