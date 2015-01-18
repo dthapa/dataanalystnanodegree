@@ -24,11 +24,23 @@ def word_count():
 
 
     word_counts = {}
-
-    for line in sys.stdin:
+    file_name = 'aliceInWonderland.txt'
+    input_file = open(file_name, 'r')
+    lines = input_file.readlines()
+    
+    letters = 'abcdefghijklmnopqrstuvwxyz'
+    
+    for line in lines:
         data = line.strip().split(" ")
-        
-        # Your code here
+        for word in data:
+            temp = ''
+            for w in word.lower():
+                if w in letters:
+                    temp += w
+            if temp in word_counts:
+                word_counts[temp] += 1
+            else:
+                word_counts[temp] = 1
 
     print word_counts
 

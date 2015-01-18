@@ -12,6 +12,19 @@ def reducer():
     #each key-value pair is formatted correctly!
     #Here's a sample final key-value pair: "Gujarat\t5.0"
     
-    # your code here
-    
+    for i in sys.stdin:
+        data = i.strip().split('\t')
+        if len(data) != 2:
+            continue
+        this_key, count = data
+        
+        if old_key and old_key != this_key:
+            print "{0}\t{1}".format(old_key, aadhaar_generated)
+            aadhaar_generated = 0
+        old_key = this_key
+        aadhaar_generated += float(count)
+        
+    if old_key != None:
+        print "{0}\t{1}".format(old_key, aadhaar_generated)
+            
 reducer()
