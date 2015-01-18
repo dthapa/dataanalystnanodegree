@@ -23,12 +23,16 @@ def lineplot_compare(hr_by_team_year_sf_la_csv):
     # 
     # For example, ggplot(data, aes(xvar, yvar, color=category_var)).  This
     # should help you.
+    df = pd.read_csv(hr_by_team_year_sf_la_csv)
     
-    gg = #YOUR CODE GOES HERE
+    gg = ggplot(df, aes(df['yearID'], df['HR'], color='teamID')) + \
+            geom_point() + geom_line() + ggtitle('Home Run by Teams') + \
+            xlab('Year') + ylab('Home Run')
     return gg
 
 if __name__ == "__main__":
     data = "hr_by_team_year_sf_la.csv"
     image = "plot.png"
     gg =  lineplot_compare(data)
-    ggsave(image, gg, width=11, height=8)
+    print gg
+    ggsave(image, gg, width=11, height=12)

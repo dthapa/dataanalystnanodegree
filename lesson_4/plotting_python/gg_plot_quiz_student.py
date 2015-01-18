@@ -16,8 +16,11 @@ def lineplot(hr_year_csv):
     # You can check out the data loaded into the dataframe at the link below:
     # https://www.dropbox.com/s/awgdal71hc1u06d/hr_year.csv
     
-    # your code here
-    gg = # more of your code here
+    hr_year = pd.read_csv(hr_year_csv)
+    
+    gg = ggplot(hr_year, aes(hr_year['yearID'], hr_year['HR'])) + \
+                geom_point(color = 'red') + geom_line(color = 'red') + \
+                ggtitle('home run by year') + xlab('year') + ylab('home runs')
     return gg
 
 
