@@ -17,11 +17,10 @@ def compute_cost(features, values, theta):
     
     This should be the same code as the compute_cost function in the lesson #3 exercises. But
     feel free to implement your own.
-    """
-    
-    #
-    # your code here
-    #
+    """ 
+    m = len(values)
+    sum_of_square_errors = np.square(np.dot(features, theta) - values).sum()
+    cost = sum_of_square_errors / (2*m)
 
     return cost
 
@@ -32,13 +31,13 @@ def gradient_descent(features, values, theta, alpha, num_iterations):
     This is the same gradient descent code as in the lesson #3 exercises. But feel free
     to implement your own.
     """
-    m = len(values)
     cost_history = []
 
     for i in range(num_iterations):
-        # 
-        # your code here
-        #
+        predicted_values = np.dot(features, theta)
+        theta = theta - alpha/len(values) * np.dot((predicted_values - values), features)
+        cost_history += [compute_cost(features, values, theta)]
+        
     return theta, pd.Series(cost_history)
 
 def predictions(dataframe):
@@ -60,12 +59,15 @@ def predictions(dataframe):
     the 30 second  limit that's placed on running your program. Try using a smaller number
     for num_iterations if that's the case.
     
-    Or if you are using your own algorithm/modesl, see if you can optimize your code so it
+    Or if you are using your own algorithm/model, see if you can optimize your code so it
     runs faster.
     '''
 
     dummy_units = pd.get_dummies(dataframe['UNIT'], prefix='unit')
-    features = dataframe[['rain', 'precipi', 'Hour', 'meantempi']].join(dummy_units)
+    #not having UNIT can hurt predictions
+    #features = dataframe[['rain', 'precipi', 'Hour', 'meantempi']]
+    features = dataframe[['rain', 'precipi', 'Hour', 'meantempi', 
+                          'meanpressurei', 'meanwindspdi', 'meandewpti']].join(dummy_units)
     values = dataframe[['ENTRIESn_hourly']]
     m = len(values)
 
@@ -76,13 +78,16 @@ def predictions(dataframe):
     values_array = np.array(values).flatten()
 
     #Set values for alpha, number of iterations.
-    alpha = 0.1 # please feel free to play with this value
+    alpha = 0.5 # please feel free to play with this value
     num_iterations = 75 # please feel free to play with this value
 
     #Initialize theta, perform gradient descent
     theta_gradient_descent = np.zeros(len(features.columns))
-    theta_gradient_descent, cost_history = gradient_descent(features_array, values_array, theta_gradient_descent,
+    theta_gradient_descent, cost_history = gradient_descent(features_array, 
+                                                            values_array, 
+                                                            theta_gradient_descent,
                                                             alpha, num_iterations)
+    print theta_gradient_descent
     predictions = np.dot(features_array, theta_gradient_descent)
 
     return predictions
@@ -93,7 +98,6 @@ def compute_r_squared(data, predictions):
     r_squared = SSReg / SST
 
     return r_squared
-
 
 if __name__ == "__main__":
     input_filename = "turnstile_data_master_with_weather.csv"

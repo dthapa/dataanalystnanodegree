@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
-import scipy
-import statsmodels
+import statsmodels.api as sm
 
 """
 In this optional exercise, you should complete the function called 
@@ -30,10 +29,14 @@ runs faster.
 """
 
 def predictions(weather_turnstile):
-    #
-    # Your implementation goes here. Feel free to write additional
-    # helper functions
-    # 
+    dummy_units = pd.get_dummies(weather_turnstile['UNIT'], prefix='unit')
+    X = weather_turnstile[['rain', 'precipi', 'Hour', 'meantempi', 
+                          'meanpressurei', 'meanwindspdi', 'meandewpti']].join(dummy_units)
+                          
+    y = weather_turnstile['ENTRIESn_hourly']
+    X = sm.add_constant(X)
+    est = sm.OLS(y, X).fit()
+    prediction = est.predict().tolist()
     return prediction
 
 def compute_r_squared(data, predictions):
