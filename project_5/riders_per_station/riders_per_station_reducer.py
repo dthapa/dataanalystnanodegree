@@ -14,6 +14,18 @@ def reducer():
     old_key = None
 
     for line in sys.stdin:
-        # your code here
+        data = line.strip().split('\t')
+        if len(data) != 2:
+            continue
+        current_key, count = data
+        if old_key and old_key != current_key:
+            print "{0}\t{1}".format(old_key, entries)
+            entries = 0
+        
+        old_key = current_key
+        entries += float(count)
+    
+    if old_key != None:
+        print "{0}\t{1}".format(old_key, entries)
 
 reducer()

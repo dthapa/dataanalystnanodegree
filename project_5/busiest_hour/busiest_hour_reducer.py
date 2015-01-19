@@ -1,4 +1,5 @@
 import sys
+from datetime import datetime
 
 def reducer():
     '''
@@ -23,11 +24,39 @@ def reducer():
     ...
     
     '''
-
+    # this problem isn't as difficult because the datetime is ordered too
     max_entries = 0
     old_key = None
-    datetime = ''
-
-    # your code here
+    best_datetime = ''
+    pos = 0
     
+    for line in sys.stdin:
+        data = line.strip().split('\t')
+        if len(data) != 4:
+            continue
+
+        unit, entries, date, time = data
+        current_datetime = datetime.strptime(date+' '+time, '%Y-%m-%d %H:%M:%S')
+            
+        if pos == 0:
+            best_datetime = current_datetime
+            pos += 1
+            
+        if old_key and old_key != unit:
+            print "{0}\t{1}\t{2}".format(old_key, best_datetime, max_entries)
+            max_entries = 0
+            best_datetime = current_datetime
+        old_key = unit
+        
+        if float(entries) >= max_entries:
+            best_datetime = current_datetime
+            max_entries = float(entries)
+        elif float(entries) == max_entries:
+            if best_datetime == '' or best_datetime < current_datetime:
+                best_datetime = current_datetime
+                max_entries = float(entries)
+    
+    if old_key != None:
+        print "{0}\t{1}\t{2}".format(old_key, best_datetime, max_entries)
+                                
 reducer()

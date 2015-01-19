@@ -1,5 +1,6 @@
 import sys
 import string
+import pandas as pd
 
 def mapper():
     """
@@ -14,7 +15,9 @@ def mapper():
     """
     
     for line in sys.stdin:
-        # your code here
-                                    
+        data = line.strip().split(',')
+        if len(data) != 22 or data[1] == 'UNIT':
+            continue
+        print "{0}\t{1}".format(data[1], data[6])
 
 mapper()
