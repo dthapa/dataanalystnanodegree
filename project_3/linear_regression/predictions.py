@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
 def normalize_features(array):
    """
@@ -62,12 +63,17 @@ def predictions(dataframe):
     Or if you are using your own algorithm/model, see if you can optimize your code so it
     runs faster.
     '''
+    # best is 0.494721161545
 
     dummy_units = pd.get_dummies(dataframe['UNIT'], prefix='unit')
     #not having UNIT can hurt predictions
-    #features = dataframe[['rain', 'precipi', 'Hour', 'meantempi']]
-    features = dataframe[['rain', 'precipi', 'Hour', 'meantempi', 
-                          'meanpressurei', 'meanwindspdi', 'meandewpti']].join(dummy_units)
+    dataframe['WEEKDAYn'] = dataframe['DATEn'].apply(lambda x: datetime.strptime(x, "%Y-%m-%d").weekday())
+    dataframe['HOLIDAYn'] = dataframe['WEEKDAYn'].apply(lambda x: 1 if x in [5, 10, 25] else 0)
+    dataframe['WEEKDAYn'] = dataframe['WEEKDAYn'].apply(lambda x: 0 if x in [5, 6] else 1)
+    dataframe['PEAKn'] = dataframe['Hour'].apply(lambda x: 1 if x in [9, 12, 13, 16, 17, 20, 21, 0] else 0)
+    
+    features = dataframe[['rain', 'Hour', 'PEAKn', 'WEEKDAYn', 'HOLIDAYn',
+                          'maxtempi', 'mintempi']].join(dummy_units)
     values = dataframe[['ENTRIESn_hourly']]
     m = len(values)
 

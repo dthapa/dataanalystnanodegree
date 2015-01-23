@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
+from datetime import datetime
 
 """
 In this optional exercise, you should complete the function called 
@@ -30,8 +31,18 @@ runs faster.
 
 def predictions(weather_turnstile):
     dummy_units = pd.get_dummies(weather_turnstile['UNIT'], prefix='unit')
-    X = weather_turnstile[['rain', 'precipi', 'Hour', 'meantempi', 
-                          'meanpressurei', 'meanwindspdi', 'meandewpti']].join(dummy_units)
+    
+    weather_turnstile['WEEKDAYn'] = weather_turnstile['DATEn'].apply(lambda x: datetime.strptime(x, "%Y-%m-%d").weekday())
+    weather_turnstile['HOLIDAYn'] = weather_turnstile['WEEKDAYn'].apply(lambda x: 1 if x in [5, 10, 25] else 0)
+    weather_turnstile['WEEKDAYn'] = weather_turnstile['WEEKDAYn'].apply(lambda x: 0 if x in [5, 6] else 1)
+    weather_turnstile['PEAKn'] = weather_turnstile['Hour'].apply(lambda x: 1 if x in [9, 12, 13, 16, 17, 20, 21, 0] else 0)
+    
+    
+    #X = weather_turnstile[['rain', 'precipi', 'Hour', 'meantempi', 
+    #                      'meanpressurei', 'meanwindspdi', 'meandewpti']].join(dummy_units)
+    
+    X = weather_turnstile[['rain', 'Hour', 'PEAKn', 'WEEKDAYn', 'HOLIDAYn',
+                           'maxtempi', 'mintempi']].join(dummy_units)
                           
     y = weather_turnstile['ENTRIESn_hourly']
     X = sm.add_constant(X)
