@@ -1,5 +1,6 @@
-from pandas import *
+import pandas as pd
 from ggplot import *
+from datetime import datetime
 
 def plot_weather_data(turnstile_weather):
     '''
@@ -29,14 +30,19 @@ def plot_weather_data(turnstile_weather):
     of the actual data in the turnstile_weather dataframe
     '''
 
-    plot = # your code here
+    df = turnstile_weather
+    df['WEEKDAYn'] = df['DATEn'].apply(lambda x: datetime.strptime(x, "%Y-%m-%d").weekday())
+    df_new = df[['WEEKDAYn','ENTRIESn_hourly']].groupby(['WEEKDAYn']).apply(lambda x: x.mean())
+    
+    plot = ggplot(df_new, aes(x='WEEKDAYn', y='ENTRIESn_hourly')) + geom_line() + geom_point() + \
+            ggtitle('Ridership by Day of Week') + xlab('Day Mon-0 Sun-6') + ylab('Entries')
     return plot
 
 
 if __name__ == "__main__":
     image = "plot.png"
+    input_filename = 'turnstile_data_master_with_weather.csv'
     with open(image, "wb") as f:
         turnstile_weather = pd.read_csv(input_filename)
-        turnstile_weather['datetime'] = turnstile_weather['DATEn'] + ' ' + turnstile_weather['TIMEn']
-        gg =  plot_weather_data(turnstile_weather)
+        gg = plot_weather_data(turnstile_weather)
         ggsave(f, gg)

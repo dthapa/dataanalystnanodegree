@@ -1,8 +1,6 @@
 from pandas import *
 from ggplot import *
-
-from pandas import *
-from ggplot import *
+import pandasql as pds
 
 def plot_weather_data(turnstile_weather):
     ''' 
@@ -34,7 +32,24 @@ def plot_weather_data(turnstile_weather):
     of the actual data in the turnstile_weather dataframe
     '''
 
-    plot = ggplot(turnstile_weather, aes('EXITSn_hourly', 'ENTRIESn_hourly')) + stat_smooth(span=.15, color='black', se=True)+ geom_point(color='lightblue') + ggtitle("MTA Entries By The Hour!") + xlab('Exits') + ylab('Entries')
+    df = turnstile_weather
+    df_new = df[['UNIT', 'ENTRIESn_hourly']]
+    df_new.columns = ['UNIT', 'ENTRIES']
+
+    q = '''
+    select UNIT, ENTRIES
+    from df_new 
+    group by UNIT
+    '''
+    
+    df_new = pds.sqldf(q.lower(), locals())
+    df_new['UNIT'] = df_new['UNIT'].apply(lambda x: int(x[1:]))
+    print df_new
+    
+    plot = ggplot(df_new, aes(x='UNIT', y='ENTRIES')) + geom_point() + \
+            ggtitle('Ridership by Subway Station') + xlab('Station') + ylab('Entries per hour')
+    
+    
     return plot
 
 if __name__ == "__main__":
